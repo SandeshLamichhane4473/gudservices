@@ -17,7 +17,7 @@ import {AiFillFileExcel} from 'react-icons/ai';
 import {AiOutlineMail} from 'react-icons/ai';
 import {BsSearchHeart}  from 'react-icons/bs';
 import { addDoc } from 'firebase/firestore';
-import Select from 'react-select';
+ 
 import {AiOutlineVerticalAlignBottom} from 'react-icons/ai';
 import Stepper from 'react-stepper-horizontal';
 

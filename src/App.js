@@ -19,17 +19,36 @@ import OverallValutationIdDetails from './component/Home/Valuation/OverallValuta
 import ValuationVerify from './component/Home/Valuation/valuationverify';
 import Bank from './component/Home/Valuation/Bank';
  import EditValuation from './component/Home/Valuation/EditValuation';
+import DashboardLayout from './layout/DashboardLayout';
+import Construction from './component/Valuation/Construction';
+import Valuation from './component/Valuation/Valuation';
+import EditValuationNew from './component/Valuation/EditValuationNew';
+import BankNew from './component/Valuation/BankNew';
 function App() {
   document.write = "Gud Services...";
   const [navVisible, showNavbar] = useState(false);
   return (
     <AuthContextProvider>
       <div className="App">
-
         <Routes>
-
           <Route path="/" element={<Login />} />
           <Route path="*" element={<> not found</>} />
+
+
+          <Route path="/new" element={<DashboardLayout />}>
+            <Route index element={<h2>Welcome to Dashboard</h2>} />
+              <Route path="banks" element={<BankNew />} />
+            <Route path="construction" element={<Construction />} />
+             <Route path="valuation" element={<Valuation />} />
+            <Route path="valuation/:id" element={<EditValuationNew />} />
+            {/* <Route path="construction" element={<Construction />} />
+            <Route path="valuation" element={<ValuationVerify />} />
+            <Route path="logs" element={<Logs />} /> */}
+            <Route path="logout" element={<Logout />} />
+          </Route>
+
+
+
           <Route path="/home/view/:id" element={<OverallDetails />} />
           <Route path="/home/val_id/:id" element={<OverallValutationIdDetails />} />
           <Route path="/home/verify/:id" element={<ValuationVerify />} />
@@ -40,17 +59,6 @@ function App() {
             <Protected>
               <Home />
             </Protected>} />
-          {/* <Route path="/" element={<Login />} />
-          <Route path="/product" element={<Products />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="*" element={<> not found</>} />
-          <Route path="/home" element={
-            <Protected>
-              <Home />
-
-            </Protected>} />
-          <Route path='/dashboard' element={<Protected><Dashboard /></Protected>} /> */}
-
         </Routes>
 
       </div>

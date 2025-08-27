@@ -1076,6 +1076,13 @@ function checkunverified(arg1,arg2,arg3,arg4){
 
      <input type="text" placeholder="Client Address" ref={newidref}  onChange={(e)=>setnew_reference_id(e.target.value)} value={new_reference_id}   className="text-black w-72 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
      <button onClick={()=>{create_new_id()}} className='ml-2 bg-transparent bordder border-2 hover:bg-red-400 border-red-400 p-2 rounded-lg'>Create New</button>
+<Link 
+  to="/new/valuation" 
+  state={{ message: "hello" }}
+  className="ml-2 bg-green-800 border-2 border-red-400 hover:bg-red-400 p-2 rounded-lg"
+>
+  New Template
+</Link>
     </div>
 
 
