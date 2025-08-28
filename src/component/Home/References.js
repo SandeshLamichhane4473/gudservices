@@ -13,6 +13,7 @@ import { ThreeDots } from 'react-loader-spinner';
 import { UserAuth } from '../../context/AuthContext';
 import { json } from 'react-router-dom';
 import jsonData from '../../refarray.json';
+import { limit } from 'firebase/firestore'; 
  
 
 export default function References() {
@@ -25,7 +26,7 @@ export default function References() {
 
     let currentIndex = 0;
     useEffect(() => {
-        getALlReferenceNo();
+        getAllReferenceNo();
     }, []);
 
     let i = 0;
@@ -41,47 +42,41 @@ export default function References() {
     function showAddInsTab() {
         setAddNewTab(!openAddNewTab)
     }
+ 
+async function getAllReferenceNo() {
+    setLoading(true);
+    let temp = [];
 
+    try {
+        const refNo = collection(db, "reference");
+        const q = query(refNo, orderBy("timestamp", "desc"), limit(15));
+        const querySnapshot = await getDocs(q);
 
-    async function getALlReferenceNo() {
-        //try catch
-        setLoading(true);
-        let temp = [];
-        try {
-            let i = 0;
-            const refNo = collection(db, "reference")
-            const q = query(refNo, orderBy("timestamp", "desc"));
-            const querySnapshot = await getDocs(q);
-            let docsLength = querySnapshot.docs.length;
-            if (docsLength < 1) {
-                setAllReferenceNos([])
-            } else {
+        const docsLength = querySnapshot.docs.length;
 
-                setAllReferenceNos([])
-                  let i=0;
-                 querySnapshot.forEach(async(doc) => {
-                    let docData = doc.data();
-                    let parseDta = (docData);
-                    parseDta.index = docsLength--;
-                    temp.push(parseDta)
-                     // setAllReferenceNos(prev => [...prev, docData])
-                });
-                //ihere its a new user
-          
-               //  exportToJsonFile( refarray, "refarrayx");
-                setAllReferenceNos(temp);
-            }
-            setLoading(false);
+        if (docsLength < 1) {
+            setAllReferenceNos([]);
+        } else {
+            let index = docsLength;
 
-        } catch (e) {
-            swal({
-                title: "Unable to fecth users from database" + e,
-                timer: 3000
-            })
-             
-            setLoading(false)
+            querySnapshot.forEach((doc) => {
+                let docData = doc.data();
+                docData.index = index--;
+                temp.push(docData);
+            });
+
+            setAllReferenceNos(temp);
         }
+    } catch (e) {
+        swal({
+            title: "Unable to fetch users from database: " + e.message,
+            timer: 3000
+        });
+    } finally {
+        setLoading(false);
     }
+}
+
 
   
 async function updatetimestamp(){
@@ -187,8 +182,7 @@ for (const item of jsonData) {
                 swal("Select claim ON" +referenceForm.claimON)
                 return;
             }
-
-           
+ 
             if (regEx.test(referenceForm.referenceNo) ) {
 
             } else {
@@ -269,56 +263,141 @@ for (const item of jsonData) {
             })
         }
     }
+/// function for generating the new Reference ID
+async function generateReferenceFileNo() {
+  try {
+     const valuationRef = collection(db, "reference");; 
+     const q = query(valuationRef, orderBy("timestamp","desc"), limit(1));
+   
+     let tempdata=[];
+     const querySnapshot= await getDocs(q);
+     if (querySnapshot.docs.length >= 1) {      
+       querySnapshot.forEach(async (doc) => {  
+       let tempValFileNo=doc.data()['referenceNo'];
+       let lastno= tempValFileNo.split('-')[2];
+       let middle= tempValFileNo.split('-')[1];
+       let first= tempValFileNo.split('-')[0];
+        
+       const num = parseInt(lastno, 10)
+       let newAuto=first+"-"+middle+"-"+(num+1).toString();
+       const timestamp = Math.floor(Date.now());
+       setreferenceForm({ ...referenceForm, referenceNo: newAuto, timestamp:timestamp})
+        
+       });
+      
+     
+     
+    } else {
+      // if no document exists, return a default first file no
+       
+          setreferenceForm({ ...referenceForm, referenceNo: "***"})
+    }
+  } catch (e) {
+    alert(e);
+    return null;
+  }
+}
+
+
+
     return (
 
         <div>
-
-            <div className='text-yellow-500 text-xs p-4 font-bold   w-auto  bottom-2  border-2 '>
-                <h1 className=' overflow-clip'>Add Reference Number<span className='text-orange-700 font-semibold text-xs'></span> </h1>
-            </div>
+ 
             {
                 openAddNewTab ?
                     <>
-                        <div className=' border-dashed border-2 p-2  mt-3'>
-                            <h1 className='p-4  font-mono font-bold text-sm text-amber-600'>Unique File No</h1>
+  <div className="border-2 border-dashed rounded-2xl shadow-sm bg-white p-6 mt-5">
+    <h1 className="text-lg font-bold text-black mb-6 border-b pb-2">
+      Unique File No
+    </h1>
 
-                            <div className='p-4'>
-                                <div class="mb-4">
-                                    <label for="email" class="block mb-2    text-yellow-500 font-bold">New Reference No</label>
-                                    <input type="text" placeholder="2079-80-01" value={referenceForm.referenceNo} onChange={(e) => setreferenceForm({ ...referenceForm, referenceNo: e.target.value })} id="email" class="shadow-sm   border-gray-300  text-xs rounded-lg text focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5     text-orange-500 font-bold  " required />
-                                </div>
+    {/* Input Section */}
+<div className="mb-6">
+  <label
+    htmlFor="referenceNo"
+    className="block mb-2 text-sm font-semibold text-black"
+  >
+    New Reference No
+  </label>
 
-                                <ul class="items-center w-full mt-8 mb-15 text-xs font-medium text-orange-600  border border-gray-200 rounded-lg sm:flex     ">
-                                    <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r ">
-                                        <div class="flex items-center pl-3">
-                                            <input onChange={(e) => { hadnleRadio(referenceForm.referenceNo, "Vehicle") }} checked={referenceForm && referenceForm.claimON === 'Vehicle'} value="Vehicle" type="radio" name="list-radio" class="w-6 h-6 text-black   border-gray-300   " />
-                                            <label for="horizontal-list-radio-license" class="w-full py-3 ml-2 text-xs font-medium  text-orange-500  ">Vehicle</label>
-                                        </div>
-                                    </li>
+  <div className="flex">
+    {/* Input box */}
+    <input
+      disabled
+      type="text"
+      id="referenceNo"
+      placeholder="..."
+      value={referenceForm.referenceNo}
+      onChange={(e) =>
+        setreferenceForm({ ...referenceForm, referenceNo: e.target.value })
+      }
+      className="flex-1 p-3 text-sm font-semibold text-black border border-gray-300 rounded-l-lg shadow-sm focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+      required
+    />
 
-                                    <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r  ">
-                                        <div class="flex items-center pl-3">
-                                            <input onChange={(e) => { hadnleRadio(referenceForm.referenceNo, "Property") }} checked={referenceForm && referenceForm.claimON === 'Property'} value="Property" type="radio" name="list-radio" class="w-6 h-6 text-black   border-gray-300   " />
-                                            <label for="horizontal-list-radio-license" class="w-full py-3 ml-2 text-xs font-medium text-orange-500 ">Property</label>
-                                        </div>
-                                    </li>
-                                    <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r  ">
-                                        <div class="flex items-center pl-3">
-                                            <input onChange={(e) => { hadnleRadio(referenceForm.referenceNo, "Others") }} checked={referenceForm && referenceForm.claimON === 'Others'} value="Others" type="radio" name="list-radio" class="w-6 h-6 text-black   border-gray-300   " />
-                                            <label for="horizontal-list-radio-license" class="w-full py-3 ml-2 text-xs font-medium text-orange-500  ">Others</label>
-                                        </div>
-                                    </li>
-                                </ul>
+    {/* Button beside input */}
+    <button
+      type="button"
+      onClick={()=>{generateReferenceFileNo()}} // <-- create this function
+      className="px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-sm font-bold rounded-r-lg focus:ring-2 focus:ring-amber-400"
+    >
+      Generate
+    </button>
+  </div>
+ 
 
+    </div>
 
-                                <div className='flex space-x-4 mt-5'>
-                                    {saveLoading ? <ThreeDots height="50" width="50" radius="9" color="#4fa94d" ariaLabel="three-dots-loading" wrapperStyle={{}} wrapperClassName="" visible={true}
-                                    /> : <button onClick={() => addNewRefNo()} type="submit" class="text-white  bg-yellow-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300   rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-green-700 dark:focus:ring-green-800 font-bold">Add and Save</button>}
-                                    <button onClick={() => showAddInsTab()} type="submit" class="text-white bg-yellow-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-gray-700 "> Cancel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </> :
+    {/* Radio Options */}
+    <ul className="flex flex-col sm:flex-row border rounded-lg overflow-hidden divide-y sm:divide-y-0 sm:divide-x border-gray-200 text-sm text-black">
+      {["Vehicle", "Property", "Others"].map((option) => (
+        <li key={option} className="w-full">
+          <div className="flex items-center px-4 py-3">
+            <input
+              type="radio"
+              name="list-radio"
+              value={option}
+              checked={referenceForm && referenceForm.claimON === option}
+              onChange={() => hadnleRadio(referenceForm.referenceNo, option)}
+              className="w-5 h-5 text-black border-gray-300 focus:ring-amber-400"
+            />
+            <label className="ml-3 font-medium text-black">{option}</label>
+          </div>
+        </li>
+      ))}
+    </ul>
+
+    {/* Buttons */}
+    <div className="flex space-x-4 mt-6">
+      {saveLoading ? (
+        <ThreeDots
+          height="40"
+          width="40"
+          radius="9"
+          color="#f59e0b"
+          ariaLabel="three-dots-loading"
+          visible={true}
+        />
+      ) : (
+        <button
+          onClick={() => addNewRefNo()}
+          type="button"
+          className="px-5 py-2.5 rounded-lg text-sm font-bold text-white bg-green-600 hover:bg-green-500 focus:ring-2 focus:ring-amber-300"
+        >
+          Add & Save
+        </button>
+      )}
+      <button
+        onClick={() => showAddInsTab()}
+        type="button"
+        className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-gray-500 hover:bg-gray-600 focus:ring-2 focus:ring-gray-300"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</> :
 
                     <div>
                         <div onClick={() => showAddInsTab()} className='bg-transparent mt-6 p-4 tex-4xl border-dashed border-2 font-bold  '>
@@ -328,52 +407,60 @@ for (const item of jsonData) {
             }
 
 
-                <div className=' bg-gray-300 max-w-full p-5 w-full'> 
-                   
-                    <table className="table-auto  bg-white  mt-7 border-separate   border border-slate-500 ">
-                        <thead className='text-sm font-serif text-black font-bold p-4 m-5'>
+                <div className=' bg-gray-300 text-black max-w-full p-5 w-full'> 
+<h1>Last 10 rows</h1>
+         <table className="w-full mt-7 border-collapse rounded-xl overflow-hidden shadow-lg bg-white">
+  <thead className="bg-gradient-to-r from-amber-100 to-amber-200 text-sm text-black font-semibold">
+    <tr>
+      <th className="px-4 py-3 text-center">SN</th>
+      <th className="px-4 py-3 text-left">Insurance Company Name</th>
+      <th className="px-4 py-3 text-left">Insurance Id</th>
+      <th className="px-4 py-3 text-center">Remove</th>
+    </tr>
+  </thead>
 
-                            <tr className='bg-[rgb(220,230,243)] cursor-pointer '>
-                                <th className='px-2 py-3'>SN</th>
-                                <th className='px-2 py-3 text-start'>Insurance Company Name</th>
-                                <th className='px-2 py-3 text-start'>Insurance Id</th>
-                                <th className='px-2 py-3 text-start'>Remove</th>
-                            
-                            </tr>
-                        </thead>
-           
-                        <tbody className='text-sm font-normal text-black '>
-                    {
-                        loading ? <FidgetSpinner
-                            visible={true}
-                            height="80"
-                            width="80"
-                            user ariaLabel="dna-loading"
-                            wrapperStyle={{}}
-                            wrapperClass="dna-wrapper"
-                            ballColors={['#ff0000', '#00ff00', '#0000ff']}
-                            backgroundColor="#F4442E"
-                        /> :
-                            records && records.map((e, i) => {
+  <tbody className="text-sm text-gray-700">
+    {loading ? (
+      <tr>
+        <td colSpan="4" className="text-center py-6">
+          <FidgetSpinner
+            visible={true}
+            height="60"
+            width="60"
+            ariaLabel="dna-loading"
+            wrapperStyle={{}}
+            wrapperClass="mx-auto"
+            ballColors={["#ff0000", "#00ff00", "#0000ff"]}
+            backgroundColor="#F4442E"
+          />
+        </td>
+      </tr>
+    ) : (
+      records &&
+      records.map((e, i) => (
+        <tr
+          key={i}
+          className="even:bg-gray-50 odd:bg-white hover:bg-amber-50 transition-colors"
+        >
+          <td className="px-4 py-3 text-center font-medium">{e.index}</td>
+          <td className="px-4 py-3 font-semibold">{e.referenceNo}</td>
+          <td className="px-4 py-3">{e.claimON}</td>
+          <td className="px-4 py-3 text-center">
+            <button
+              onClick={() =>
+                handleDelete(e.referenceNo, e.claimON, i, e.insurance)
+              }
+              className="p-2 rounded-full bg-red-100 hover:bg-red-500 transition-colors"
+            >
+              <HiOutlineTrash className="text-red-600 hover:text-white text-lg" />
+            </button>
+          </td>
+        </tr>
+      ))
+    )}
+  </tbody>
+</table>
 
-
-                                return (
-                                    <tr className=' bg-white cursor-pointer   hover:bg-gray-300 ' key={i}>
-                                        <td className='p-5  '>{e.index}</td>
-                                        <td className='p-5 font-semibold '>{e.referenceNo}</td>
-                                        <td className='p-5  '> {e.claimON} </td>
-                                        <td > <button onClick={() => {
-                                            handleDelete(e.referenceNo,  e.claimON, i, e.insurance)
-                                        }
-                                        } className="outline outline-2 text-black outline-offset-2 p-4 rounded-3xl hover:bg-green-950 " ><HiOutlineTrash className='text-black hover:text-white text-xs' /></button>
-
-                                        </td>
-                                    </tr>
-                                );
-                            })
-                    }
-                </tbody>
-            </table>
             </div>
           
 

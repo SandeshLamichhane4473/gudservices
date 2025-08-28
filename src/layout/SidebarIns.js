@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-export default function Sidebar() {
+export default function SidebarIns() {
   const linkStyle = {
     display: "block",
     padding: "12px 16px",
@@ -28,30 +28,37 @@ export default function Sidebar() {
         height: "100vh",
       }}
     >
-      <h2 style={{ marginBottom: "20px", color: "#e9f0eeff" }}><b>Gud Valuation</b></h2>
+      <h2 style={{ marginBottom: "20px", color: "#e9f0eeff" }}><b>Gud Survey</b></h2>
       <ul style={{ listStyle: "none", padding: 0 }}>
         <li>
           <NavLink
-            to="banks"
+            to="insurance"
             style={({ isActive }) => (isActive ? { ...linkStyle, ...activeStyle } : linkStyle)}
           >
-            🏗️ Banks
+            🏗️ Inurance
           </NavLink>
         </li>
         <li>
           <NavLink
-            to="valuation"
+            to="newreferences"
             style={({ isActive }) => (isActive ? { ...linkStyle, ...activeStyle } : linkStyle)}
           >
-            📊 Valuation
+            📊 New Ref
           </NavLink>
         </li>
         <li>
           <NavLink
-            to="construction"
+            to="editref"
             style={({ isActive }) => (isActive ? { ...linkStyle, ...activeStyle } : linkStyle)}
           >
-            📜 Construction
+            📜 Edit Ref
+          </NavLink>
+
+            <NavLink
+            to="reports"
+            style={({ isActive }) => (isActive ? { ...linkStyle, ...activeStyle } : linkStyle)}
+          >
+          📊 Report
           </NavLink>
         </li>
         <li>

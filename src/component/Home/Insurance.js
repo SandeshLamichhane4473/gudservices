@@ -66,6 +66,12 @@ export default function () {
         }
     }
 
+    requestAnimationFrame(() => {
+  // use documentElement for widest compatibility
+  document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+  
+});
+
     async function editInsuranceObjectAttribute(name, id, index, emails) {
         try {
 
@@ -73,14 +79,16 @@ export default function () {
                 swal("Warning !!!", "Unauthorize access", "error");
                 return;
             }
+      requestAnimationFrame(() => {
+      document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+    });
 
             const _insObject = {
                 name: name,
                 id: id,
                 emails: emails
             }
-            setEditInsuranceObject(_insObject);
-
+            setEditInsuranceObject(_insObject);  
         }
         catch (e) {
             swal(e)
@@ -245,116 +253,218 @@ export default function () {
     return (
 
         <div>
-            <div className='text-yellow-500 text-xl p-4 font-bold   w-auto  bottom-2  border-2 '>
-                <h1 className=' overflow-clip'> Insurance Company Name<span className='text-orange-700 font-semibold text-xs'>Gud Engineering Services</span> </h1>
-            </div>
+           
             {
                 openEditewTab ?
                     <>
-                        <div className='border'>
-                            <>
-                                <div className=' border-dashed border-2 p-2  mt-3'>
-                                    <h1 className='p-5  font-mono font-bold text-sm text-amber-600'>Edit Insurance Company Detail</h1>
+  <div className="border rounded-2xl shadow-lg bg-white mt-5">
+    <div className="border-dashed border-2 p-4 rounded-xl ]">
+      <h1 className="p-4 text-lg font-mono font-bold text-amber-700 border-b">
+        ✏️ Edit Insurance Company Detail
+      </h1>
 
-                                    <div className='p-6'>
-                                        <div class="mb-4">
-                                            <label for="email" className="block mb-2    text-xs text-orange-500 font-bold"> Insurance Company Name</label>
-                                            <input type="text" value={editInsuranceObject.name} onChange={(e) => setEditInsuranceObject({ ...editInsuranceObject, name: e.target.value })} id="email" className="shadow-sm text-xs text-black  font-semibold  rounded-lg   block w-full p-2.5     " placeholder="xyz insurance" required />
-                                        </div>
+      <div className="p-6 space-y-6">
+        {/* Insurance Company Name */}
+        <div className="mb-4">
+          <label
+            htmlFor="companyName"
+            className="block mb-2 text-sm text-orange-600 font-semibold"
+          >
+            Insurance Company Name
+          </label>
+          <input
+            type="text"
+            value={editInsuranceObject.name}
+            onChange={(e) =>
+              setEditInsuranceObject({
+                ...editInsuranceObject,
+                name: e.target.value,
+              })
+            }
+            id="companyName"
+            placeholder="xyz insurance"
+            required
+            className="shadow-sm text-sm text-gray-800 font-medium rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-400 focus:outline-none block w-full p-3"
+          />
+        </div>
 
-                                        <div class="mb-4">
-                                            <label for="email" className="block mb-2    text-xs text-orange-500 font-bold"> Emails</label>
-                                            <ReactMultiEmail
-                                                className=" text-xs  shadow-sm  border border-gray-300 text-gray-900  rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600  "
-                                                placeholder='Input your email'
-                                                value=""
-                                                emails={editInsuranceObject.emails}
-                                                onChange={(_emails) => {
+        {/* Emails */}
+        <div className="mb-4">
+          <label
+            htmlFor="emails"
+            className="block mb-2 text-sm text-orange-600 font-semibold"
+          >
+            Emails
+          </label>
+          <ReactMultiEmail
+            className="text-xs shadow-sm border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 focus:ring-2 focus:ring-orange-400"
+            placeholder="Input your email"
+            value=""
+            emails={editInsuranceObject.emails}
+            onChange={(_emails) => {
+              setEditInsuranceObject({ ...editInsuranceObject, emails: _emails });
+            }}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            getLabel={(email, index, removeEmail) => {
+              return (
+                <div
+                  key={index}
+                  className="flex items-center space-x-2 bg-orange-100 text-orange-700 px-2 py-1 rounded-md text-xs"
+                >
+                  <span>{email}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeEmail(index)}
+                    className="text-red-500 hover:text-red-700 font-bold"
+                  >
+                    ✕
+                  </button>
+                </div>
+              );
+            }}
+          />
+        </div>
 
-                                                    setEditInsuranceObject({ ...editInsuranceObject, emails: _emails })
-                                                }}
+        {/* Buttons */}
+        <div className="flex space-x-4">
+          {saveLoading ? (
+            <ThreeDots
+              height="40"
+              width="40"
+              radius="9"
+              color="#f97316"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClassName=""
+              visible={true}
+            />
+          ) : (
+            <button
+              onClick={() => editAndSaveInsComp()}
+              type="submit"
+              className="flex-1 bg-green-600 hover:bg-orange-600 text-white font-bold rounded-lg px-5 py-2.5 text-sm shadow-md transition"
+            >
+              💾 Edit and Save
+            </button>
+          )}
+          <button
+            onClick={() => setEditNewTab(false)}
+            type="button"
+            className="flex-1 bg-gray-700 hover:bg-gray-900 text-white font-semibold rounded-lg px-5 py-2.5 text-sm shadow-md transition"
+          >
+            ❌ Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</>
 
-                                                // autoFocus={true}
-                                                onFocus={() => setFocused(true)}
-                                                onBlur={() => setFocused(false)}
-
-                                                getLabel={(email, index, removeEmail) => {
-                                                    return (
-                                                        <div data-tag key={index}>
-                                                            <div className='text-xs' data-tag-item>{email}</div>
-                                                            <span data-tag-handle onClick={() => removeEmail(index)}>
-
-                                                            </span>
-                                                        </div>
-                                                    );
-                                                }}
-                                            />
-                                        </div>
-                                        <div className='flex space-x-4'>
-                                            {saveLoading ? <ThreeDots height="50" width="50" radius="9" color="#4fa94d" ariaLabel="three-dots-loading" wrapperStyle={{}} wrapperClassName="" visible={true}
-                                            /> : <button onClick={() => editAndSaveInsComp()} type="submit" class="text-white  bg-orange-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300   rounded-lg text-lg px-5 py-2.5 text-center dark:bg-orange-800 dark:hover:bg-green-700 dark:focus:ring-green-800 font-bold">Edit and Save</button>}
-                                            <button onClick={() => setEditNewTab(false)} type="submit" class="text-white bg-red-950 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg px-5 py-2.5 text-center    "><b> Cancel</b></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </>
-
-
-                        </div>
-                    </>
 
                     :
 
                     openAddNewTab ?
-                        <>
-                            <div className=' border-dashed border-2 p-2  mt-3'>
-                                <h1 className='p-5  font-mono font-bold text-3xl text-amber-600'>Add New Insurance Company</h1>
+                    <>
+  <div className="border-2 border-dashed border-yellow-400 rounded-xl p-6 mt-6 bg-gray-200 shadow-md">
+    <h1 className="text-3xl font-mono font-bold text-amber-600 mb-6 text-center">
+      Add New Insurance Company
+    </h1>
 
-                                <div className='p-6'>
-                                    <div class="mb-4">
-                                        <label for="email" className="block mb-2    text-xs text-orange-500 font-bold"> Insurance Company Name</label>
-                                        <input type="text" value={insForm.name} onChange={(e) => setInsForm({ ...insForm, name: e.target.value })} id="email" className="shadow-sm text-xs text-black  font-normal  rounded-lg   block w-full p-2.5     " placeholder="xyz insurance" required />
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="password" className="block mb-2 text-xs font-bold text-orange-500">Insurance Id(Unique*)</label>
-                                        <input type="text" value={insForm.id} onChange={(e) => setInsForm({ ...insForm, id: e.target.value })} className="shadow-sm  font-normal   text-sm p-2 rounded-lg  block w-full text  placeholder:text-gray-900 text-black " required />
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="email" className="block mb-2    text-xs text-orange-500 font-bold"> Emails</label>
-                                        <ReactMultiEmail
-                                            className=" text-xs  shadow-sm  border border-gray-300 text-gray-900  rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600  "
-                                            placeholder='Input your email'
-                                            value=""
-                                            emails={emails}
-                                            onChange={(_emails) => {
-                                                setEmails(_emails);
-                                                setInsForm({ ...insForm, emails: _emails })
-                                            }}
+    <div className="space-y-5">
+      {/* Company Name */}
+      <div>
+        <label htmlFor="companyName" className="block mb-2 text-sm font-bold text-orange-500">
+          Insurance Company Name
+        </label>
+        <input
+          type="text"
+          id="companyName"
+          placeholder="xyz insurance"
+          value={insForm.name}
+          onChange={(e) => setInsForm({ ...insForm, name: e.target.value })}
+          className="w-full p-3 text-sm rounded-lg shadow-sm border border-gray-300 focus:ring-2 focus:ring-amber-400 focus:outline-none bg-white"
+          required
+        />
+      </div>
 
-                                            // autoFocus={true}
-                                            onFocus={() => setFocused(true)}
-                                            onBlur={() => setFocused(false)}
+      {/* Insurance ID */}
+      <div>
+        <label htmlFor="insuranceId" className="block mb-2 text-sm font-bold text-orange-500">
+          Insurance Id (Unique*)
+        </label>
+        <input
+          type="text"
+          id="insuranceId"
+          placeholder="Unique ID"
+          value={insForm.id}
+          onChange={(e) => setInsForm({ ...insForm, id: e.target.value })}
+          className="w-full p-3 text-sm rounded-lg shadow-sm border border-gray-300 focus:ring-2 focus:ring-amber-400 focus:outline-none bg-white"
+          required
+        />
+      </div>
 
-                                            getLabel={(email, index, removeEmail) => {
-                                                return (
-                                                    <div data-tag key={index}>
-                                                        <div className='text-xs' data-tag-item>{email}</div>
-                                                        <span data-tag-handle onClick={() => removeEmail(index)}>
-                                                            ×
-                                                        </span>
-                                                    </div>
-                                                );
-                                            }}
-                                        />
-                                    </div>
-                                    <div className='flex space-x-4'>
-                                        {saveLoading ? <ThreeDots height="50" width="50" radius="9" color="#4fa94d" ariaLabel="three-dots-loading" wrapperStyle={{}} wrapperClassName="" visible={true}
-                                        /> : <button onClick={() => addNewInsCompName()} type="submit" class="text-white  bg-yellow-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300   rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-green-700 dark:focus:ring-green-800 font-bold">Add and Save</button>}
-                                        <button onClick={() => showAddInsTab()} type="submit" class="text-white bg-yellow-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-gray-700 "> Cancel</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </>
+      {/* Emails */}
+      <div>
+        <label className="block mb-2 text-sm font-bold text-orange-500">
+          Emails
+        </label>
+        <ReactMultiEmail
+          className="w-full p-3 text-sm rounded-lg shadow-sm border border-gray-300 focus:ring-2 focus:ring-amber-400 focus:outline-none bg-white"
+          placeholder="Input your email"
+          emails={emails}
+          onChange={(_emails) => {
+            setEmails(_emails);
+            setInsForm({ ...insForm, emails: _emails });
+          }}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          getLabel={(email, index, removeEmail) => (
+            <div key={index} className="flex items-center bg-yellow-100 text-xs px-2 py-1 rounded mr-1 mb-1">
+              <span>{email}</span>
+              <button
+                type="button"
+                onClick={() => removeEmail(index)}
+                className="ml-2 text-red-500 font-bold"
+              >
+                ×
+              </button>
+            </div>
+          )}
+        />
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex space-x-4 justify-center mt-4">
+        {saveLoading ? (
+          <ThreeDots
+            height="50"
+            width="50"
+            radius="9"
+            color="#4fa94d"
+            ariaLabel="three-dots-loading"
+            visible={true}
+          />
+        ) : (
+          <>
+            <button
+              onClick={() => addNewInsCompName()}
+              className="bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg px-6 py-2.5 focus:ring-2 focus:ring-green-400"
+            >
+              Add and Save
+            </button>
+            <button
+              onClick={() => showAddInsTab()}
+              className="bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg px-6 py-2.5 focus:ring-2 focus:ring-gray-400"
+            >
+              Cancel
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+</>
 
 
 
@@ -362,69 +472,99 @@ export default function () {
 
 
                         <div>
-                            <div onClick={() => showAddInsTab()} className='bg-transparent mt-6 p-4 tex-4xl border-dashed border-2 font-bold  '>
-                                <h1 className='w-72  p-3 cursor-pointer hover:bg-green-700 bg-blue-950 font-mono font-bold  rounded-md shadow-md text-xs flex'> <span className='mr-4'> Add New </span><HiPlus className='mt-1' /> </h1>
-                            </div>
+                            <div onClick={() => showAddInsTab()} className="mt-6">
+                                    <button
+                                        className="flex items-center px-5 py-1 w-72 
+                                                bg-green-800 text-white font-mono font-bold text-sm 
+                                                rounded-lg shadow-md transition-all duration-300
+                                                hover:bg-green-700 active:scale-95 
+                                                focus:outline-none focus:ring-2 focus:ring-green-400"
+                                    >
+                                        <span className="mr-3">Add New</span>
+                                        <HiPlus className="text-lg" />
+                                    </button>
+                                    </div>
+
                         </div>
             }
 
-          <div className=' bg-gray-300 max-w-full p-5 w-full h-60 overflow-y-scroll'>      
-                   <table className="table-auto  bg-white  mt-7 border-separate   border border-slate-500 ">
-                       <thead className='text-sm font-serif text-black font-bold p-4 m-5'>
+          <div className='   max-w-full   w-full  overflow-y-scroll'>      
+                  <table className="table-auto w-full bg-white mt-7 border border-slate-300 rounded-lg shadow-md overflow-hidden">
+  <thead className="bg-gradient-to-r from-green-700 to-green-600 text-white text-sm font-semibold">
+    <tr>
+      <th className="px-4 py-3 text-center">SN</th>
+      <th className="px-4 py-3 text-left">Insurance Name</th>
+      <th className="px-4 py-3 text-left">Insurance Id</th>
+      <th className="px-4 py-3 text-left">Emails</th>
+      <th className="px-4 py-3 text-center">Edit</th>
+      <th className="px-4 py-3 text-center">Remove</th>
+    </tr>
+  </thead>
 
-                           <tr className='bg-[rgb(220,230,243)] cursor-pointer '>
-                               <th className='px-2 py-3'>SN</th>
-                               <th className='px-2 py-3 text-start'>Insurance Company Name</th>
-                               <th className='px-2 py-3 text-start'>Insurance Id</th>
-                               <th className='px-2 py-3 text-start'>Emails</th>
-                               <th className='px-2 py-3 text-start'>Edit</th>
-                               <th className='px-2 py-3 text-start'>Remove</th>
-                            
-                           </tr>
-                       </thead>
-                       <tbody className='text-sm font-normal text-black '>
+  <tbody className="text-sm text-gray-700 divide-y divide-gray-200">
+    {loading ? (
+      <tr>
+        <td colSpan={6} className="py-10 text-center">
+          <FidgetSpinner
+            visible={true}
+            height="60"
+            width="60"
+            ariaLabel="dna-loading"
+            wrapperClass="mx-auto"
+            ballColors={['#ff0000', '#00ff00', '#0000ff']}
+            backgroundColor="#F4442E"
+          />
+        </td>
+      </tr>
+    ) : (
+      insuranceName &&
+      insuranceName.map((e, i) => (
+        <tr
+          key={i}
+          className="hover:bg-gray-100 transition-colors duration-200"
+        >
+          <td className="px-4 py-3 text-center">{i + 1}</td>
+          <td className="px-4 py-3 font-semibold whitespace-nowrap">
+            {e.name}
+          </td>
+          <td className="px-4 py-3">{e.id}</td>
+          <td className="px-4 py-3">
+            <div className="flex flex-col gap-1">
+              {e.emails &&
+                e.emails.map((ex, idx) => (
+                  <span key={idx} className="text-gray-600">
+                    {ex}
+                  </span>
+                ))}
+            </div>
+          </td>
+          <td className="px-4 py-3 text-center">
+            <button
+              onClick={() => {
+                setEditNewTab(true);
+                editInsuranceObjectAttribute(e.name, e.id, i, e.emails);
+              }}
+              className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md shadow-sm transition-all duration-200"
+            >
+              <HiPencilAlt className="text-lg" />
+            </button>
+          </td>
+          <td className="px-4 py-3 text-center">
+            <button
+              onClick={() => {
+                handleDelete(e.name, e.id, i);
+              }}
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md shadow-sm transition-all duration-200"
+            >
+              <HiOutlineTrash className="text-lg" />
+            </button>
+          </td>
+        </tr>
+      ))
+    )}
+  </tbody>
+</table>
 
-             
-
-                    {
-                        loading ? <FidgetSpinner
-                            visible={true}
-                            height="80"
-                            width="80"
-                            user ariaLabel="dna-loading"
-                            wrapperStyle={{}}
-                            wrapperClass="dna-wrapper"
-                            ballColors={['#ff0000', '#00ff00', '#0000ff']}
-                            backgroundColor="#F4442E"
-                        /> :
-                            insuranceName && insuranceName.map((e, i) => {
-                                return (
-                                    <tr className='      cursor-pointer hover:bg-gray-300' key={i}>
-                                        <td className='p-5  '>{i + 1}</td>
-                                        <td className='p-5  font-semibold'>{e.name}</td>
-                                        <td className='p-5  '> {e.id} </td>
-                                        <td className='p-5   flex flex-col'> {e.emails && e.emails.map(ex => <span>{ex}</span>)} </td>
-                                        <td className='p-5' > <button onClick={() => {
-                                            setEditNewTab(true)
-                                            editInsuranceObjectAttribute(e.name, e.id, i, e.emails)
-                                        }
-                                        } className="outline outline-1    p-2 rounded-1xl hover:bg-green-800   ">
-                                            <HiPencilAlt className='text-black text-xs' /></button>
-                                        </td>
-
-                                        <td  className='p-5'> <button onClick={() => {
-                                            handleDelete(e.name, e.id, i)
-                                        }
-                                        } className="outline outline-1  p-2 rounded-1xl hover:bg-yellow-950   ">
-                                            <HiOutlineTrash className='text-black text-xs' /></button>
-
-                                        </td>
-                                    </tr>
-                                );
-                            })
-                    }
-                </tbody>
-            </table>
             </div>
         </div>
 

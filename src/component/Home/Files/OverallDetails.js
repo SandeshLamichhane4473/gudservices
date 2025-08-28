@@ -55,30 +55,29 @@ export default function OverallDetails() {
     const { user} = UserAuth()
    const myNavigate= useNavigate();
 
-   const location = useLocation();
+   
     const [showLoaderModal, setShowLoaderModal]= useState(false);
-   const { id } =  useParams();
- 
+   
+const { id } = useParams();
+const location = useLocation();
+const searchId = location.state?.id || id;
 
-var searchId =  "";
+useEffect(() => {
+  if (!searchId) {
+    swal({
+      title: "Error",
+      text: "No Reference ID provided",
+      icon: "error",
+    });
+    return; // exit early from effect
+  }
 
- location.state!==null?
-  searchId=location.state.id:
-  searchId=id;
- 
-    
-    
-    useEffect(() => {
-     // location.state.id;
-  
-     getReferenceSuggestion();
-     getReferenceIdDEtails();
-     loadPhotosOfSurvey();
-     getAllFIleDetail();
-    
-
-    }, []);
-
+  // Safe to call your functions
+  getReferenceSuggestion();
+  getReferenceIdDEtails();
+  loadPhotosOfSurvey();
+  getAllFIleDetail();
+}, [searchId]); // inc
     
 
 
@@ -300,8 +299,7 @@ function capitalizeFirstLetter(string) {
 
 //DOWNLOAD ALL PHOTOS AND FILE END *******************************
     async function getReferenceIdDEtails() {
-   
- 
+  
       setLoading(true);          
         let temp = [];
         try {
@@ -371,6 +369,7 @@ function capitalizeFirstLetter(string) {
             setLoading(false);
 
         } catch (e) {
+          console.log(e)
             swal({
                 title: "  Error" + e,
                  
@@ -381,15 +380,7 @@ function capitalizeFirstLetter(string) {
     }
 /////////// *******************************************************SEND DETAILS IN MAILS ****************
 
-
-function sentRefDetailInMail(){
-  try{
-   
-  }
-  catch(e){
-    swal("Error : "+ e)
-  }
-}
+ 
 
 ////  *****************  CONVERT JSON FIELD TO ROW *****************************************//
 
@@ -745,30 +736,39 @@ function convertToString(value){
 }
 return (
         <div className=' w-full h-full bg-slate-950 p-5'>
-            <div className='   flex flex-row  m-2 text-center bg-slate-950'>
-                <div className='h-10  z-10 flex'><img src={logo}  className='shadow-2xl rounded-full' alt='Image' /></div>
-                <p className='text-sm   font-bold p-5 text-orange-400'>Gud Engineering Sevice</p>
-                <p className='text-sm   font-normal p-5 text-orange-400'>Details of {id}</p>
-                 {user && user.role==='insurance'?<></>: <Select  className='w-96 max-w-full text-black font-normal text-sm'
-                                options={insuranceCompanysOption}
-                                placeholder="Search Reference No"
-                                defaultSelectValue="Select Reference"
-                                isSearchable
- 
-                                onKeyDown={(event)=>{
-                                    if(event.key==="Enter"){
-                                      console.log("Entered... clicked.....");
-                                    }
+      <div className="flex flex-col sm:flex-row items-center justify-between bg-gray-200 text-black p-4 rounded-xl shadow-lg m-2 gap-4">
+  {/* Logo */}
+  <div className="flex items-center h-12">
+    <img src={logo} alt="Logo" className="h-12 w-12 rounded-full shadow-2xl" />
+  </div>
 
-                                }}
-                                
-                                onChange={async(e)=>{
-                                 setSearchReferenceNo(e.value);
-                                    handleRoute(e.value);
-                                }} />
+  {/* Titles */}
+  <div className="flex flex-col sm:flex-row items-center gap-2 text-center">
+    <p className="text-sm font-bold text-black">Gud Engineering Service</p>
+    <p className="text-sm font-normal text-black">Details of {id}</p>
+  </div>
 
-                              }
-            </div>
+  {/* Conditional Select */}
+  {user?.role !== "insurance" && (
+    <Select
+      className="w-full sm:w-96 max-w-full text-black font-normal text-sm"
+      options={insuranceCompanysOption}
+      placeholder="Search Reference No"
+      defaultSelectValue="Select Reference"
+      isSearchable
+      onKeyDown={(event) => {
+        if (event.key === "Enter") {
+          console.log("Entered... clicked.....");
+        }
+      }}
+      onChange={async (e) => {
+        setSearchReferenceNo(e.value);
+        handleRoute(e.value);
+      }}
+    />
+  )}
+</div>
+
             {
               isLoading?
          
@@ -861,11 +861,11 @@ return (
                     {
                         isLoading?
                         <></>:
-                   <div className='flex text-center align-center space-x-2   bg-dark flex-shrink-0  p-2  bg-slate-200  '>    
+                   <div className='flex text-center align-center space-x-2     flex-shrink-0  p-2     '>    
                   
-                    <div className='bg-green-950  p-2 rounded-lg box-border  cursor-pointer  hover:bg-green-600 hover:text-red-100'>
+                    <div className=' bg-green  p-2 rounded-lg box-border  cursor-pointer  hover:bg-green-600 hover:text-red-100'>
                     <button className='   text-orange rounded-xl shadow-black ' onClick={geneRatePDF}>
-                    <><AiFillPrinter className=' text-3xl' /> </>  
+                    <><AiFillPrinter className=' text-3xl bg-green-600' /> </>  
                    
                     </button>
                    
@@ -876,36 +876,20 @@ return (
 
                     <div  onClick= { ()=>{ saveExcel()}} className='bg-green-950 p-2 rounded-lg box-border  cursor-pointer  hover:bg-green-600 hover:text-red-100'>
                     <button className='   text-white rounded-xl shadow-black ' >
-                       <><AiFillFileExcel className=' text-3xl' /> </>  
-                     
+                       <><AiFillFileExcel className=' text-3xl bg-green-600' /> </>  
                     </button>
                   
                     </div>
 
                     <div className='bg-green-950 p-2 rounded-lg box-border  cursor-pointer  hover:bg-green-600 hover:text-red-100'>
                        <button className='   text-white rounded-xl shadow-black ' onClick={()=>{generateFromUrl();}}>
-                       <><BsFiletypeDocx className=' text-3xl' /> </>  
+                       <><BsFiletypeDocx className=' text-3xl bg-green-600' /> </>  
                    
                        </button>
                     
                     </div>
 
-{/* 
-                    <div className='bg-green-950 p-2 rounded-lg box-border  cursor-pointer  hover: hover:bg-green-600  hover:text-red-100'>
-                       <button className='   text-white rounded-xl shadow-black '
-                        onClick={()=>{alert("Update soon...")}}>
-                       <><AiOutlineMail className=' text-3xl' /> </>  
-                    
-                       </button>
-                  
-                    </div> */}
-
-                     {/* <div>
-                     <a href="mailto:manish@simplygraphix.com?subject=Feedback for 
-webdevelopersnotes.com&body=The Tips and Tricks section is great
-&cc=anotheremailaddress@anotherdomain.com
-&bcc=onemore@anotherdomain.com">Send me an emscxzcacdail</a>
-                      </div> */}
+ 
                     </div>
                     }
                    

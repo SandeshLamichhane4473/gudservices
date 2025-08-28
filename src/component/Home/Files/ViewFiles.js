@@ -527,7 +527,7 @@ export default function ViewFiles() {
                                                         }}
                                                         className="font-bold text-blue-600 dark:text-blue-500 hover:underline" >
                                                           
-                                                          <Link to={"view/"+ e.referenceNo  } state={"hellow"}  target="_blank"><HiEye /></Link>
+                                                          <Link to={"/newins/view/"+ e.referenceNo  } state={"hellow"}  ><HiEye /></Link>
                                                         </button>
                                                     </td>
                                                     <td className=" items-center px-2 py-2space-x-3">

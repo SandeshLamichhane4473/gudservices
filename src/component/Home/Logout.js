@@ -2,27 +2,25 @@ import React, { useState } from 'react'
 import { UserAuth } from '../../context/AuthContext'
 import swal from 'sweetalert'
 import { FidgetSpinner } from 'react-loader-spinner';
+import { useNavigate } from 'react-router-dom';
 export default function Logout() {
     const { user, logout, userRole } = UserAuth()
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
     async function handleLogout() {
-        try {
-            await logout();
-            swal({
-                title: "Successfull Logged out",
-                // icon:"success",
-                timer: 3000,
+  setLoading(true);
+  try {
+    await logout();
+    swal({ title: "Successfully Logged out", timer: 2000 }).then(() => {
+      navigate("/", { replace: true });
+    });
+  } catch (e) {
+    swal({ title: e.message || "Logout failed", icon: "error", timer: 3000 });
+  } finally {
+    setLoading(false);
+  }
+}
 
-
-            })
-        } catch (e) {
-            swal({
-                title: e,
-                icon: "error",
-                timer: 3000
-            })
-        }
-    }
 
     function capitalizeFirstWord(word=""){
    
@@ -63,7 +61,11 @@ export default function Logout() {
                 </div>
                 <div className='flex'>
                     <div className='w-28  font-bold '> Photo : </div>
-                     <img src={user.photourl}  alt='Profile image' className='w-28 h-28' />
+                     <img 
+                            src={user?.photourl || "/default-avatar.png"}  
+                            alt='Profile image' 
+                            className='w-28 h-28' 
+                            />
                 </div>
                 <div className='flex'>
                     <div className='w-28   font-bold  overflow-hidden whitespace-nowrap '> <p>Status :  </p> </div>
@@ -85,9 +87,12 @@ export default function Logout() {
                             :
 
                             <div className='flex'>
-                                <button onClick={() => { handleLogout() }} class=" p-2 mt-5 mb-9   bg-red-700   text-white  hover:text-black text-sm hover:bg-gray-100 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                                    Confirm Logout
-                                </button>
+                               <button 
+  onClick={handleLogout} 
+  className="p-2 mt-5 mb-9 bg-red-700 text-white hover:text-black text-sm hover:bg-gray-100 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+>
+  Confirm Logout
+</button>
 
                             </div>
                     }

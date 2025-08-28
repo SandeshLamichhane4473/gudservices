@@ -22,32 +22,30 @@ import { HiCubeTransparent } from 'react-icons/hi';
 import Reports from './Files/Reports';
 import Valuation from './Valuation/Valuation';
 import Construction from './Valuation/Construction';
+import { FaFileAlt, FaChartBar, FaCog } from "react-icons/fa"; // react-icons
 
 export default function Home() {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(true)
     const { user, logout, userRole } = UserAuth()
     const customNavigate = useNavigate();
     const [currentComponet, setcurrentComponent] = useState('');
-    // useEffect(() => {
-    //     console.log("...");
-    //     alert(currentUser && currentUser.email)
-    //     if (!currentUser) {
-    //         return <Navigate replace to={"/login"} />
-    //     }
-    // }, [])
+  const cards = [
+    {
+      title: "Valuation",
+      icon: <FaFileAlt className="w-10 h-10 text-amber-600" />,
+      link: "/new",
+    },
+    {
+      title: "Survey",
+      icon: <FaChartBar className="w-10 h-10 text-blue-600" />,
+      link: "/newins",
+    },
+    
+  ];
 
-
-    const handleLogout = async () => {
-        try {
-            await logout();
-        }
-        catch (e) {
-            swal({ title: e })
-        }
-    }
 
     return (
-        < div className=' flex w-full h-full'>
+        < div className=' flex bg-gray-200 w-full h-full'>
 
             <div className={open ? ' fixed left-0 top-0 bg-slate-900 h-screen p-5 pt-8 w-52 duration-300' :
                 'fixed bg-slate-950 h-screen p-5 pt-8 w-20 duration-300'}>
@@ -114,8 +112,7 @@ export default function Home() {
             <div className={open ? "ml-52 duration-500" : "ml-20 duration-500  "}>
                 {
 
-                    currentComponet !== '' && currentComponet === 'home' ?
-                        <ImageCrousal /> :
+                     
                         currentComponet !== '' && currentComponet === 'user-mgmt' && user.role==='admin' ?
                             <Users />
                             : currentComponet !== '' && currentComponet === 'refereces' && user.role==='admin' || currentComponet !== '' && currentComponet === 'refereces' && user.role==='moderator'?
@@ -139,7 +136,29 @@ export default function Home() {
                                             currentComponet !== '' && currentComponet === 'reports' &&  user.role==='insurance'?
                                             <Reports/> :
                                             <div>
-                                                <ImageCrousal />
+ 
+ <div className="flex items-center mt-5 justify-center gap-5 ml-10">
+ 
+    {cards.map((card, index) => (
+      <Link
+        key={index}
+        to={card.link}
+        className="flex flex-col items-center justify-center p-6 rounded-2xl shadow-md bg-white hover:shadow-xl hover:scale-105 transition-transform duration-300 cursor-pointer"
+      >
+        {card.icon}
+        <h2 className="mt-4 text-lg font-semibold text-gray-700">
+          {card.title}
+        </h2>
+      </Link>
+    ))}
+ 
+ 
+
+ 
+                                                        </div>
+
+
+  <h1 className='  ml-10 text-2xl text-black mt-10'>अल्छी लाग्यो ?  <a  className="underline text-blue-600" target='_blank' href='https://brahmbodh.netlify.app'>Click Here</a> </h1>
                                             </div>
                 }
             </div>

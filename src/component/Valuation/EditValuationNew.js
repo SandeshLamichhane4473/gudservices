@@ -908,7 +908,7 @@ async function uploadFile( valfileNo, pdffile, name, fileType){
 
 
       <div className="h-4"></div>
-     <h1 className="text-lg text-bold text-gray-600 py-4">File Detail</h1>
+     <h1 className="text-lg text-bold text-gray-600 py-4">Add File Detail</h1>
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-1 lg:grid-cols-3  shadow-lg  border-2 py-7 px-3 rounded  bg-gray-100 ">
   
    
@@ -956,32 +956,42 @@ async function uploadFile( valfileNo, pdffile, name, fileType){
 
 
   <div>
-    <ul>
-    { allfileTypeAndUrl &&   allfileTypeAndUrl.map((e, index)=>{
-                                return (
-                                <li  className='cursor-pointer' key={index}>
-                                    <div className='flex   '>
-                                    <label className='mr-2 w-20'>{index+1}</label>
-                                        <label className='mr-2 w-20'>{e.fileType}</label>
-                                        <label className='mr-2  bg-red w-44  block overflow-clip'> {e.fileName.toString().slice(0,20) }</label>
-                                        <label onClick={async ()=>{
-                                                                           
-                                     //   deleteFromStorage(form.valuationFileNo, e.fileName.toString());    
-                                                                              
-                                        }} className='mr-2 text-red-600 underline cursor-pointer'></label>
+<table className="min-w-full border border-gray-200 text-sm text-left">
+  <thead className="bg-gray-100">
+    <tr>
+      <th className="border px-4 py-2 w-12">#</th>
+      <th className="border px-4 py-2 w-32">File Type</th>
+      <th className="border px-4 py-2 w-60">File Name</th>
+      <th className="border px-4 py-2 w-20">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {allfileTypeAndUrl &&
+      allfileTypeAndUrl.map((e, index) => (
+        <tr key={index} className="hover:bg-gray-50">
+          <td className="border px-4 py-2">{index + 1}</td>
+          <td className="border px-4 py-2">{e.fileType}</td>
+          <td className="border px-4 py-2">
+            {e.fileName.toString().slice(0, 20)}
+          </td>
+          <td className="border px-4 py-2 text-red-600 underline cursor-pointer"
+              onClick={async () => {
+                // deleteFromStorage(form.valuationFileNo, e.fileName.toString());
+              }}>
+            Delete
+          </td>
+        </tr>
+      ))}
+  </tbody>
+</table>
 
-                                    </div>
-                                   </li>);
-                            })
-                         }
-  </ul>
 </div>
       </div>
 
 
   
    <div className="h-4"></div>
-     <h1 className="text-lg text-bold text-gray-600 py-4">Cost</h1>
+     <h1 className="text-lg text-bold text-gray-600 py-4">Add or Update Cost Detail</h1>
   <div class="grid    bg-gray-100   grid-cols-1 gap-4 sm:grid-cols-1 lg:grid-cols-3  shadow-lg  border-2 py-7 px-3 rounded">
   
     
@@ -996,10 +1006,10 @@ async function uploadFile( valfileNo, pdffile, name, fileType){
      <input type="text"  value={formCost.fmvValue} onChange={(e)=>{setFormCost({...formCost, fmvValue: e.target.value}) ;  }} placeholder="Fmv Value" class=" text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
     </div>
 
-    <div>
+    {/* <div>
     <label className="mt-20 ">Book Value</label>
      <input type="text"  value={formCost.bookValue} onChange={(e)=>{setFormCost({...formCost, bookValue: e.target.value}) ;  } } placeholder="Book Value" class=" text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-    </div>
+    </div> */}
 
     <div>
     <label className="mt-20 ">Amount Of Bill</label>
@@ -1058,7 +1068,7 @@ async function uploadFile( valfileNo, pdffile, name, fileType){
 }
 
       <div className="h-4"></div>
-     <h1 className="text-lg text-bold text-gray-600 py-4">Close</h1>
+     <h1 className="text-lg text-bold text-gray-600 py-4">Add any remarks</h1>
   <div class="grid   bg-gray-100  grid-cols-1  gap-4 sm:grid-cols-1 lg:grid-cols-3  shadow-lg  border-2 py-7 px-3 rounded">
   
     <div>
@@ -1098,7 +1108,7 @@ async function uploadFile( valfileNo, pdffile, name, fileType){
 </div>
 
 
-<div className="h-11 bg-slate-400"> </div>
+<div className="h-11  bg-white"> </div>
 
 </>
 }

@@ -160,15 +160,21 @@ const [formclient, setformclient] = useState({
 
       {/* Remaining */}
       <th className="border px-4 py-2 whitespace-nowrap">ADDRESS</th>
+
+      <th className="border px-4 py-2 whitespace-nowrap">FIELD COST</th>
+      <th className="border px-4 py-2 whitespace-nowrap">FMV VALUE</th>
+      {/* <th className="border px-4 py-2 whitespace-nowrap">BOOK VALUE</th> */}
+      <th className="border px-4 py-2 whitespace-nowrap">BILL AMT</th>
+      <th className="border px-4 py-2 whitespace-nowrap">RECEIVED AMT</th>
+
+
       <th className="border px-4 py-2 whitespace-nowrap">OWNER NAME</th>
       <th className="border px-4 py-2 whitespace-nowrap">OWNER ADDRESS</th>
       <th className="border px-4 py-2 whitespace-nowrap">OWNER PHONE</th>
       <th className="border px-4 py-2 whitespace-nowrap">PRO-TYPE</th>
-      <th className="border px-4 py-2 whitespace-nowrap">FIELD COST</th>
-      <th className="border px-4 py-2 whitespace-nowrap">FMV VALUE</th>
-      <th className="border px-4 py-2 whitespace-nowrap">BOOK VALUE</th>
-      <th className="border px-4 py-2 whitespace-nowrap">BILL AMT</th>
-      <th className="border px-4 py-2 whitespace-nowrap">RECEIVED AMT</th>
+
+    
+
       <th className="border px-4 py-2 whitespace-nowrap">FILES</th>
       <th className="border px-4 py-2 whitespace-nowrap">BANK NAME</th>
       <th className="border px-4 py-2 whitespace-nowrap">BANK BRANCH</th>
@@ -206,15 +212,23 @@ const [formclient, setformclient] = useState({
 
         {/* Remaining columns */}
         <td className="border px-4 py-2 whitespace-nowrap">{row.clientAddress}</td>
+
+
+       <td className="border px-4 py-2 whitespace-nowrap">{row.fieldchargeCost}</td>
+        <td className="border px-4 py-2 whitespace-nowrap">{row.fmvValue}</td>
+        {/* <td className="border px-4 py-2 whitespace-nowrap">{row.bookValue}</td> */}
+        <td className="border px-4 py-2 whitespace-nowrap">{row.amountofBill}</td>
+        <td className="border px-4 py-2 whitespace-nowrap">{row.totalIncome}</td>
+
+
         <td className="border px-4 py-2 whitespace-nowrap">{row.ownerName}</td>
         <td className="border px-4 py-2 whitespace-nowrap  ">{row.ownerAddress}</td>
         <td className="border px-4 py-2 whitespace-nowrap">{row.ownerPhone}</td>
+    
         <td className="border px-4 py-2 whitespace-nowrap">{row.propertyType}</td>
-        <td className="border px-4 py-2 whitespace-nowrap">{row.fieldchargeCost}</td>
-        <td className="border px-4 py-2 whitespace-nowrap">{row.fmvValue}</td>
-        <td className="border px-4 py-2 whitespace-nowrap">{row.bookValue}</td>
-        <td className="border px-4 py-2 whitespace-nowrap">{row.amountofBill}</td>
-        <td className="border px-4 py-2 whitespace-nowrap">{row.totalIncome}</td>
+
+ 
+
         <td className="border px-4 py-2 whitespace-nowrap">
           {row.files?.map((val, i) => (
             <a
