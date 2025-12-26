@@ -24,6 +24,8 @@ import Swal from 'sweetalert2';
 import { getCountFromServer } from 'firebase/firestore';
 import { startAfter } from 'firebase/firestore';
 import { where } from 'firebase/firestore';
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 
 export default  function Valuation(){
   const { user  } = UserAuth();
@@ -172,7 +174,77 @@ function  resetformElement(){
   
 }
 
+async function exportToExcel(){
+ 
+  try {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Valuations");
 
+    // Define columns (based on your Firestore fields)
+    worksheet.columns = [
+      { header: "Valuation File No", key: "valuationFileNo", width: 20 },
+      { header: "Client Name", key: "clientOrcompanyName", width: 25 },
+      { header: "Client Address", key: "clientAddress", width: 30 },
+      { header: "Client Phone", key: "clientPhone", width: 18 },
+      { header: "Owner Name", key: "ownerName", width: 20 },
+      { header: "Owner Address", key: "ownerAddress", width: 30 },
+      { header: "Owner Phone", key: "ownerPhone", width: 18 },
+      { header: "Bank Name", key: "bankName", width: 30 },
+      { header: "Bank Branch", key: "bankBranch", width: 25 },
+      { header: "Property Type", key: "propertyType", width: 15 },
+      { header: "FMV Value", key: "fmvValue", width: 15 },
+      { header: "Current State", key: "curentState", width: 15 },
+      { header: "Maker", key: "initmaker", width: 25 },
+      { header: "Checker", key: "initchecker", width: 25 },
+      { header: "Init Submit Date", key: "initSubmitDate", width: 18 },
+      { header: "Created Date", key: "created_date", width: 20 }
+    ];
+
+    // Style header row
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.font = { bold: true };
+      cell.alignment = { vertical: "middle", horizontal: "center" };
+    });
+
+    // Add rows from Firestore data
+    longTermStorageOfArray.forEach((item) => {
+      worksheet.addRow({
+        valuationFileNo: item.valuationFileNo || "",
+        clientOrcompanyName: item.clientOrcompanyName || "",
+        clientAddress: item.clientAddress || "",
+        clientPhone: item.clientPhone || "",
+        ownerName: item.ownerName || "",
+        ownerAddress: item.ownerAddress || "",
+        ownerPhone: item.ownerPhone || "",
+        bankName: item.bankName || "",
+        bankBranch: item.bankBranch || "",
+        propertyType: item.propertyType || "",
+        fmvValue: item.fmvValue || "",
+        curentState: item.curentState || "",
+        initmaker: item.initmaker || "",
+        initchecker: item.initchecker || "",
+        initSubmitDate: item.initSubmitDate || "",
+        created_date: item.created_date
+          ? new Date(item.created_date).toLocaleDateString()
+          : ""
+      });
+    });
+
+    // Generate Excel file
+    const buffer = await workbook.xlsx.writeBuffer();
+
+    const blob = new Blob([buffer], {
+      type:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    });
+
+    saveAs(blob, "Valuation_Report.xlsx");
+  } catch (error) {
+    console.error("Excel export error:", error);
+  }
+};
+
+ 
 
 function removeFileNoFromSuggestion(fileNo){
  try{
