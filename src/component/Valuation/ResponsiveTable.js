@@ -143,6 +143,7 @@ const [formclient, setformclient] = useState({
       { header: "Bank Name", key: "bankName", width: 30 },
       { header: "Bank Branch", key: "bankBranch", width: 25 },
       { header: "Property Type", key: "propertyType", width: 15 },
+      { header: "LatLong", key: "latlong", width: 15 },
       { header: "FMV Value", key: "fmvValue", width: 15 },
       { header: "Current State", key: "curentState", width: 15 },
       { header: "Maker", key: "initmaker", width: 25 },
@@ -170,6 +171,7 @@ const [formclient, setformclient] = useState({
         bankName: item.bankName || "",
         bankBranch: item.bankBranch || "",
         propertyType: item.propertyType || "",
+        latlong: item.latlong || "",
         fmvValue: item.fmvValue || "",
         curentState: item.curentState || "",
         initmaker: item.initmaker || "",
@@ -274,6 +276,7 @@ const [formclient, setformclient] = useState({
       <th className="border px-4 py-2 whitespace-nowrap">FILES</th>
       <th className="border px-4 py-2 whitespace-nowrap">BANK NAME</th>
       <th className="border px-4 py-2 whitespace-nowrap">BANK BRANCH</th>
+      <th className="border px-4 py-2 whitespace-nowrap">LATLONG</th>
       <th className="border px-4 py-2 whitespace-nowrap">EDIT</th>
     </tr>
   </thead>
@@ -340,6 +343,7 @@ const [formclient, setformclient] = useState({
         </td>
         <td className="border px-4 py-2 whitespace-nowrap">{row.bankName}</td>
         <td className="border px-4 py-2 whitespace-nowrap">{row.bankBranch}</td>
+        <td className="border px-4 py-2 whitespace-nowrap">{row.latlong}</td>
         <td className="border px-4 py-2 text-blue-800 whitespace-nowrap">
           <Link to={`/new/valuation/${row.valuationFileNo}`}>Edit</Link>
         </td>
