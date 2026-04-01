@@ -30,7 +30,9 @@ const [formclient, setformclient] = useState({
      latlong:"",
        fieldchargeCost:"",
        fmvValue:"",
-       amountofBill:""
+       amountofBill:"",
+       latitude:"",
+       longitude:"",
   });
 
   function clearFormClient(){
@@ -49,6 +51,8 @@ const [formclient, setformclient] = useState({
        fieldchargeCost:"",
        fmvValue:"",
        amountofBill:"",
+       latitude:"",
+       longitude:"",
 
        //here is the
         bankName: "",
@@ -74,7 +78,7 @@ const [formclient, setformclient] = useState({
 
    const handleSubmitNewClient =  async(e) =>{
     e.preventDefault();
-    console.log("Form Data:", formclient);
+    
     
   
     // 🚀 you can call API here
@@ -144,6 +148,8 @@ const [formclient, setformclient] = useState({
       { header: "Bank Branch", key: "bankBranch", width: 25 },
       { header: "Property Type", key: "propertyType", width: 15 },
       { header: "LatLong", key: "latlong", width: 15 },
+      { header: "Lat", key: "latitude", width: 15 },
+      { header: "Long", key: "longitude", width: 15 },
       { header: "FMV Value", key: "fmvValue", width: 15 },
       { header: "Current State", key: "curentState", width: 15 },
       { header: "Maker", key: "initmaker", width: 25 },
@@ -172,6 +178,8 @@ const [formclient, setformclient] = useState({
         bankBranch: item.bankBranch || "",
         propertyType: item.propertyType || "",
         latlong: item.latlong || "",
+        latitude: item.latitude || "",
+        longitude: item.longitude || "",
         fmvValue: item.fmvValue || "",
         curentState: item.curentState || "",
         initmaker: item.initmaker || "",
@@ -206,31 +214,31 @@ const [formclient, setformclient] = useState({
           placeholder="Search by Ref or Client Name"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="border px-3 py-1 rounded flex-1 text-black"
+          className="border px-1 text-sm py-1 rounded flex-1 text-black"
         />
         <button
           onClick={handleSearch}
-          className="px-4 py-1 bg-green-800 text-white rounded hover:bg-green-600"
+          className="px-1 text-sm py-1 bg-green-800 text-white rounded hover:bg-green-600"
         >
           Search
         </button>
           <button
           onClick={() => setIsModalOpenClientNew(true)}
-          className="px-4 py-1 bg-green-800 text-white rounded hover:bg-green-600"
+          className="px-1 text-sm py-1 bg-green-800 text-sm text-white rounded hover:bg-green-600"
         >
           Add New
         </button>
         
           <button
           onClick={() => window.location.reload()}
-          className="px-4 py-1 bg-green-800 text-white rounded hover:bg-green-600"
+          className="px-1 text-sm py-1 bg-green-800 text-white rounded hover:bg-green-600"
         >
            Refresh
         </button>
 
          <button
           onClick={() => handleExportJson()}
-          className="px-4 py-1 bg-green-800 text-white rounded hover:bg-green-600"
+          className="px-1 text-sm py-1 bg-green-800 text-white rounded hover:bg-green-600"
         >
            Excel
         </button>
@@ -244,40 +252,42 @@ const [formclient, setformclient] = useState({
   <thead className="bg-gray-100">
     <tr>
       {/* 1st column */}
-      <th className="sticky left-0 bg-gray-100 border px-4 py-2 whitespace-nowrap w-20 z-30">
+      <th className="sticky left-0 bg-gray-100 border text-sm px-1 py-1 whitespace-nowrap w-20 z-30">
         VIEW
       </th>
       {/* 2nd column */}
-      <th className="sticky left-20 bg-gray-100 border px-4 py-2 whitespace-nowrap w-36 z-30">
+      <th className="sticky left-20 bg-gray-100 border text-sm px-1 py-1 whitespace-nowrap w-36 z-30">
         REF
       </th>
       {/* 3rd column */}
-      <th className="sticky left-[11rem] bg-gray-100 border px-4 py-2 whitespace-nowrap w-48 z-30">
+      <th className="sticky left-[11rem] bg-gray-100 border text-sm px-1 py-1 whitespace-nowrap w-48 z-30">
         CLIENT NAME
       </th>
 
       {/* Remaining */}
-      <th className="border px-4 py-2 whitespace-nowrap">ADDRESS</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">ADDRESS</th>
 
-      <th className="border px-4 py-2 whitespace-nowrap">FIELD COST</th>
-      <th className="border px-4 py-2 whitespace-nowrap">FMV VALUE</th>
-      {/* <th className="border px-4 py-2 whitespace-nowrap">BOOK VALUE</th> */}
-      <th className="border px-4 py-2 whitespace-nowrap">BILL AMT</th>
-      <th className="border px-4 py-2 whitespace-nowrap">RECEIVED AMT</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">FIELD COST</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">FMV VALUE</th>
+      {/* <th className="border text-sm px-1 py-1 whitespace-nowrap">BOOK VALUE</th> */}
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">BILL AMT</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">RECEIVED AMT</th>
 
 
-      <th className="border px-4 py-2 whitespace-nowrap">OWNER NAME</th>
-      <th className="border px-4 py-2 whitespace-nowrap">OWNER ADDRESS</th>
-      <th className="border px-4 py-2 whitespace-nowrap">OWNER PHONE</th>
-      <th className="border px-4 py-2 whitespace-nowrap">PRO-TYPE</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">OWNER NAME</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">OWNER ADDRESS</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">OWNER PHONE</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">PRO-TYPE</th>
 
     
 
-      <th className="border px-4 py-2 whitespace-nowrap">FILES</th>
-      <th className="border px-4 py-2 whitespace-nowrap">BANK NAME</th>
-      <th className="border px-4 py-2 whitespace-nowrap">BANK BRANCH</th>
-      <th className="border px-4 py-2 whitespace-nowrap">LATLONG</th>
-      <th className="border px-4 py-2 whitespace-nowrap">EDIT</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">FILES</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">BANK NAME</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">BANK BRANCH</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">LATLONG</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">Lat</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">Long</th>
+      <th className="border text-sm px-1 py-1 whitespace-nowrap">EDIT</th>
     </tr>
   </thead>
 
@@ -294,41 +304,41 @@ const [formclient, setformclient] = useState({
         {/* 1st column */}
         <td
           onClick={() => handleOpenModal(row)}
-          className="sticky left-0 bg-gray-100 border px-4 py-2 w-20 z-30 cursor-pointer text-green-800 hover:text-green-900"
+          className="sticky left-0 bg-gray-100 border text-sm px-1 py-1 w-20 z-30 cursor-pointer text-green-800 hover:text-green-900"
         >
           <HiEye size={22} />
         </td>
 
         {/* 2nd column */}
-        <td className="sticky left-20 bg-gray-100 border px-4 py-2 min-w-[150px] z-30">
+        <td className="sticky left-20 bg-gray-100 border text-sm px-1 py-1 min-w-[150px] z-30">
           {row.valuationFileNo}
         </td>
 
         {/* 3rd column */}
-        <td className="sticky left-[11rem] bg-gray-100 border px-4 py-2 w-48 z-30 whitespace-nowrap">
+        <td className="sticky left-[11rem] bg-gray-100 border text-sm px-1 py-1 w-48 z-30 whitespace-nowrap">
           {row.clientOrcompanyName}
         </td>
 
         {/* Remaining columns */}
-        <td className="border px-4 py-2 whitespace-nowrap">{row.clientAddress}</td>
+        <td className="border text-sm px-1 py-1 whitespace-nowrap">{row.clientAddress}</td>
 
 
-       <td className="border px-4 py-2 whitespace-nowrap">{row.fieldchargeCost}</td>
-        <td className="border px-4 py-2 whitespace-nowrap">{row.fmvValue}</td>
-        {/* <td className="border px-4 py-2 whitespace-nowrap">{row.bookValue}</td> */}
-        <td className="border px-4 py-2 whitespace-nowrap">{row.amountofBill}</td>
-        <td className="border px-4 py-2 whitespace-nowrap">{row.totalIncome}</td>
+       <td className="border text-sm px-1 py-1 whitespace-nowrap">{row.fieldchargeCost}</td>
+        <td className="border text-sm px-1 py-1 whitespace-nowrap">{row.fmvValue}</td>
+        {/* <td className="border text-sm px-1 py-1 whitespace-nowrap">{row.bookValue}</td> */}
+        <td className="border text-sm px-1 py-1 whitespace-nowrap">{row.amountofBill}</td>
+        <td className="border text-sm px-1 py-1 whitespace-nowrap">{row.totalIncome}</td>
 
 
-        <td className="border px-4 py-2 whitespace-nowrap">{row.ownerName}</td>
-        <td className="border px-4 py-2 whitespace-nowrap  ">{row.ownerAddress}</td>
-        <td className="border px-4 py-2 whitespace-nowrap">{row.ownerPhone}</td>
+        <td className="border text-sm px-1 py-1 whitespace-nowrap">{row.ownerName}</td>
+        <td className="border text-sm px-1 py-1 whitespace-nowrap  ">{row.ownerAddress}</td>
+        <td className="border text-sm px-1 py-1 whitespace-nowrap">{row.ownerPhone}</td>
     
-        <td className="border px-4 py-2 whitespace-nowrap">{row.propertyType}</td>
+        <td className="border text-sm px-1 py-1 whitespace-nowrap">{row.propertyType}</td>
 
  
 
-        <td className="border px-4 py-2 whitespace-nowrap">
+        <td className="border text-sm px-1 py-1 whitespace-nowrap">
           {row.files?.map((val, i) => (
             <a
               key={i}
@@ -341,10 +351,12 @@ const [formclient, setformclient] = useState({
             </a>
           ))}
         </td>
-        <td className="border px-4 py-2 whitespace-nowrap">{row.bankName}</td>
-        <td className="border px-4 py-2 whitespace-nowrap">{row.bankBranch}</td>
-        <td className="border px-4 py-2 whitespace-nowrap">{row.latlong}</td>
-        <td className="border px-4 py-2 text-blue-800 whitespace-nowrap">
+        <td className="border text-sm px-1 py-1 whitespace-nowrap">{row.bankName}</td>
+        <td className="border text-sm px-1 py-1 whitespace-nowrap">{row.bankBranch}</td>
+        <td className="border text-sm px-1 py-1 whitespace-nowrap">{row.latlong}</td>
+        <td className="border text-sm px-1 py-1 whitespace-nowrap">{row.latitude}</td>
+        <td className="border text-sm px-1 py-1 whitespace-nowrap">{row.longitude}</td>
+        <td className="border text-sm px-1 py-1 text-blue-800 whitespace-nowrap">
           <Link to={`/new/valuation/${row.valuationFileNo}`}>Edit</Link>
         </td>
       </tr>

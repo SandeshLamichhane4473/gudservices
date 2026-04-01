@@ -218,13 +218,27 @@ async function generateValuationFileNo() {
       </div>
      {/* latlong addres */}
         <div className="">
-        <label className="block mb-1 font-medium">LatLong Address</label>
+        <label className="block mb-1 font-medium">Latitude</label>
         <input
          required
           type="text"
-          value={formclient.latlong}
+          value={formclient.latitude}
           onChange={(e) =>
-            setformclient({ ...formclient, latlong: e.target.value })
+            setformclient({ ...formclient, latitude: e.target.value })
+          }
+          className="text-black w-full px-2 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+
+      <div className="">
+        <label className="block mb-1 font-medium">Longitude</label>
+        <input
+         required
+          type="text"
+          value={formclient.longitude}
+          onChange={(e) =>
+            setformclient({ ...formclient, longitude: e.target.value })
           }
           className="text-black w-full px-2 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
         />

@@ -62,6 +62,8 @@ export default function EditValuationNew() {
     bankBranch: "",
     fieldchargeCost: "",
     latlong: "",
+    latitude:"",
+    longitude:"",
 
     otherMaker: "",
     otherChecker: "",
@@ -248,7 +250,8 @@ export default function EditValuationNew() {
           bankBranch: x.bankBranch,
           fieldchargeCost: x.fieldchargeCost,
           latlong: x.latlong,
-
+           latitude:x.latitude,
+           longitude:x.longitude,
           otherMaker: x.otherMaker,
           otherChecker: x.otherChecker,
           otherUpdateStatus: x.otherUpdateStatus
@@ -471,7 +474,9 @@ export default function EditValuationNew() {
         bankBranch: formOther.bankBranch === undefined ? "" : formOther.bankBranch,
         fieldchargeCost: formOther.fieldchargeCost === undefined ? "" : formOther.fieldchargeCost,
         latlong: formOther.latlong === undefined ? "" : formOther.latlong,
-
+       latitude: formOther.latitude === undefined ? "" : formOther.latitude,
+       longitude: formOther.longitude === undefined ? "" : formOther.longitude,
+    
         otherMaker: user.email,
         otherChecker: "",
         otherUpdateStatus: "other-unverified"
@@ -802,6 +807,16 @@ export default function EditValuationNew() {
                 <div>
                   <label className="mt-20 ">Lat Long</label>
                   <input value={formOther.latlong} onChange={(e) => { setFormOther({ ...formOther, latlong: e.target.value }); }} type="text" placeholder="Lat Long" class=" text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                  
+                  <div>
+                  <label className="mt-20 ">Lat </label>
+                  <input value={formOther.latitude} onChange={(e) => { setFormOther({ ...formOther, latitude: e.target.value }); }} type="text" placeholder="Lat " class=" text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+                <div>
+                  <label className="mt-20 "> Long</label>
+                  <input value={formOther.longitude} onChange={(e) => { setFormOther({ ...formOther, longitude: e.target.value }); }} type="text" placeholder="Long" class=" text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
 
                 <div>
