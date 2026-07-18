@@ -30,7 +30,8 @@ export default function EditValuationNew() {
   const [branchList, setBranchList] = useState(['Select One']);
   const [allBankListLongTerm, setAllBankListLongTerm] = useState([]);
   const [currentBranch, setCurrentBranch] = useState();
-  const propertyTypes = ['Land', 'Building', 'Others', 'Vehicle'];
+   
+  const propertyTypes = ['Land', 'Building', 'Others', 'Vehicle','Property', 'Land&Building'];
   const [currentPropertyType, setCurrentPropertyType] = useState();
   const inputRef = useRef(null);
   const selectRef = useRef(null);
@@ -64,6 +65,8 @@ export default function EditValuationNew() {
     latlong: "",
     latitude:"",
     longitude:"",
+    property_address:"",
+        plot_no:"",
 
     otherMaker: "",
     otherChecker: "",
@@ -254,7 +257,9 @@ export default function EditValuationNew() {
            longitude:x.longitude,
           otherMaker: x.otherMaker,
           otherChecker: x.otherChecker,
-          otherUpdateStatus: x.otherUpdateStatus
+          otherUpdateStatus: x.otherUpdateStatus,
+          property_address:x.property_address,
+          plot_no:x.plot_no
         }));
 
         // let filsteredObject= allBankListLongTerm.filter((object)=>{
@@ -476,6 +481,9 @@ export default function EditValuationNew() {
         latlong: formOther.latlong === undefined ? "" : formOther.latlong,
        latitude: formOther.latitude === undefined ? "" : formOther.latitude,
        longitude: formOther.longitude === undefined ? "" : formOther.longitude,
+       
+        property_address: formOther.property_address === undefined ? "" : formOther.property_address,
+       plot_no: formOther.plot_no === undefined ? "" : formOther.plot_no,
     
         otherMaker: user.email,
         otherChecker: "",
@@ -814,10 +822,22 @@ export default function EditValuationNew() {
                   <input value={formOther.latitude} onChange={(e) => { setFormOther({ ...formOther, latitude: e.target.value }); }} type="text" placeholder="Lat " class=" text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
 
-                <div>
+                 <div>
                   <label className="mt-20 "> Long</label>
                   <input value={formOther.longitude} onChange={(e) => { setFormOther({ ...formOther, longitude: e.target.value }); }} type="text" placeholder="Long" class=" text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
+                <div>
+                  <label className="mt-20 "> property_address</label>
+                  <input value={formOther.property_address} onChange={(e) => { setFormOther({ ...formOther, property_address: e.target.value }); }} type="text" placeholder="Long" class=" text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                 
+                 <div>
+                  <label className="mt-20 "> plot_no</label>
+                  <input value={formOther.plot_no} onChange={(e) => { setFormOther({ ...formOther, plot_no: e.target.value }); }} type="text" placeholder="Long" class=" text-black w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+   
+
 
                 <div>
                   <label className="mt-20 ">Field Charge Cost</label>

@@ -9,7 +9,7 @@ import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 
 export default function ResponsiveTable({ data }) {
-  const rowsPerPage = 17;
+  const rowsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(data);
@@ -33,6 +33,8 @@ const [formclient, setformclient] = useState({
        amountofBill:"",
        latitude:"",
        longitude:"",
+       property_address:"",
+        plot_no:""
   });
 
   function clearFormClient(){
@@ -58,7 +60,9 @@ const [formclient, setformclient] = useState({
         bankName: "",
         bankBranch: "",
         //also property type 
-        propertyType:""
+        propertyType:"",
+        property_address:"",
+        plot_no:""
     });
   }
 
@@ -146,7 +150,10 @@ const [formclient, setformclient] = useState({
       { header: "Owner Phone", key: "ownerPhone", width: 18 },
       { header: "Bank Name", key: "bankName", width: 30 },
       { header: "Bank Branch", key: "bankBranch", width: 25 },
+      
       { header: "Property Type", key: "propertyType", width: 15 },
+      { header: "Property Address", key: "property_address", width: 15 },
+      { header: "Plot No", key: "plot_no", width: 15 },
       { header: "LatLong", key: "latlong", width: 15 },
       { header: "Lat", key: "latitude", width: 15 },
       { header: "Long", key: "longitude", width: 15 },
@@ -177,6 +184,8 @@ const [formclient, setformclient] = useState({
         bankName: item.bankName || "",
         bankBranch: item.bankBranch || "",
         propertyType: item.propertyType || "",
+        property_address: item.property_address || "",
+        plot_no: item.plot_no || "",
         latlong: item.latlong || "",
         latitude: item.latitude || "",
         longitude: item.longitude || "",
@@ -400,7 +409,8 @@ const [formclient, setformclient] = useState({
             <p><b>Bank:</b> {selectedRow.bankName}</p>
             <p><b>Branch:</b> {selectedRow.bankBranch}</p>
             
-
+            <p><b>Property Address:</b> {selectedRow.property_address}</p>
+            <p><b>Plot No:</b> {selectedRow.plot_no}</p>
             <p><b>Field Charge:</b> {selectedRow.fieldchargeCost}</p>
             <p><b>FMV Value:</b> {selectedRow.fmvValue}</p>
             <p><b>BILL AMT:</b> {selectedRow.amountofBill}</p>

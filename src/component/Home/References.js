@@ -277,9 +277,64 @@ async function generateReferenceFileNo() {
        let lastno= tempValFileNo.split('-')[2];
        let middle= tempValFileNo.split('-')[1];
        let first= tempValFileNo.split('-')[0];
-        
-       const num = parseInt(lastno, 10)
-       let newAuto=first+"-"+middle+"-"+(num+1).toString();
+   
+        const today = new Date();
+      if (today >= new Date("2026-07-17") && today < new Date("2027-07-17")) {
+          if (first !== "2083" && middle !== "2084") {
+              lastno = 1;
+          } else {
+              lastno++;
+          }
+          first = "2083";
+          middle = "084";
+      }
+      else if (today >= new Date("2027-07-17") && today < new Date("2028-07-17")) {
+          if (first !== "2084" && middle !== "2085") {
+              lastno = 1;
+          } else {
+              lastno++;
+          }
+          first = "2084";
+          middle = "085";
+      }
+      else if (today >= new Date("2028-07-17") && today < new Date("2029-07-17")) {
+          if (first !== "2085" && middle !== "2086") {
+              lastno = 1;
+          } else {
+              lastno++;
+          }
+          first = "2085";
+          middle = "086";
+      }
+      else if (today >= new Date("2029-07-17") && today < new Date("2030-07-17")) {
+          if (first !== "2086" && middle !== "2087") {
+              lastno = 1;
+          } else {
+              lastno++;
+          }
+          first = "2086";
+          middle = "087";
+      }
+      else if (today >= new Date("2030-07-17") && today < new Date("2031-07-17")) {
+          if (first !== "2087" && middle !== "2088") {
+              lastno = 1;
+          } else {
+              lastno++;
+          }
+          first = "2087";
+          middle = "088";
+      }
+      else if (today >= new Date("2031-07-17")) {
+          if (first !== "2088" && middle !== "2089") {
+              lastno = 1;
+          } else {
+              lastno++;
+          }
+          first = "2088";
+          middle = "089";
+      }
+       
+        const newAuto = `${first}-${middle}-${lastno}`;
        const timestamp = Math.floor(Date.now());
        setreferenceForm({ ...referenceForm, referenceNo: newAuto, timestamp:timestamp})
         

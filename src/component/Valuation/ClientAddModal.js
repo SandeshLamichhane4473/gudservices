@@ -8,9 +8,11 @@ import { query } from "firebase/firestore";
 import { getDocs } from "firebase/firestore";
 import { useRef,useState,useEffect } from "react";
 import swal from "sweetalert";
+import { dateTimeValue } from "docx";
 const ClientAddModal = ({ isOpen, onClose, formclient, setformclient, onSubmit }) => {
  // don't render if modal is closed
-   const propertyTypes = ['Land', 'Building', 'Others', 'Vehicle'];
+ 
+const propertyTypes = ['Land', 'Building', 'Others', 'Vehicle','Property', 'Land&Building'];
 const bankRef = useRef(null);
   const [currentPropertyType, setCurrentPropertyType] = useState();
 const [currentBank, setCurrentBank] = useState();
@@ -69,31 +71,87 @@ const [bankList, setBanklist] = useState(['Select One']);
   
 async function generateValuationFileNo() {
   try {
-     const valuationRef = collection(db, "valuation");; 
-     const q = query(valuationRef, orderBy("created_date","desc"), limit(1));
-   
-     let tempdata=[];
-     const querySnapshot= await getDocs(q);
-     if (querySnapshot.docs.length >= 1) {      
-       querySnapshot.forEach(async (doc) => {  
-       let tempValFileNo=doc.data()['valuationFileNo'];
-       let lastno= tempValFileNo.split('-')[2];
-       let middle= tempValFileNo.split('-')[1];
-       let first= tempValFileNo.split('-')[0];
-        
-       const num = parseInt(lastno, 10)
-       let newAuto=first+"-"+middle+"-"+(num+1).toString();
-       const timestamp = Math.floor(Date.now());
-       setformclient({ ...formclient, valuationFileNo: newAuto, created_date:timestamp})
-        
-       });
-      
-     
-     
-    } else {
-      // if no document exists, return a default first file no
-        setformclient({ ...formclient, valuationFileNo: "***"})
-    }
+const valuationRef = collection(db, "valuation");
+const q = query(valuationRef, orderBy("created_date", "desc"), limit(1));
+
+const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const doc = querySnapshot.docs[0];
+
+        const tempValFileNo = doc.data().valuationFileNo;
+        let [first, middle, lastno] = tempValFileNo.split("-");
+        const today = new Date();
+      if (today >= new Date("2026-07-17") && today < new Date("2027-07-17")) {
+          if (first !== "2083" && middle !== "2084") {
+              lastno = 1;
+          } else {
+              lastno++;
+          }
+          first = "2083";
+          middle = "2084";
+      }
+      else if (today >= new Date("2027-07-17") && today < new Date("2028-07-17")) {
+          if (first !== "2084" && middle !== "2085") {
+              lastno = 1;
+          } else {
+              lastno++;
+          }
+          first = "2084";
+          middle = "2085";
+      }
+      else if (today >= new Date("2028-07-17") && today < new Date("2029-07-17")) {
+          if (first !== "2085" && middle !== "2086") {
+              lastno = 1;
+          } else {
+              lastno++;
+          }
+          first = "2085";
+          middle = "2086";
+      }
+      else if (today >= new Date("2029-07-17") && today < new Date("2030-07-17")) {
+          if (first !== "2086" && middle !== "2087") {
+              lastno = 1;
+          } else {
+              lastno++;
+          }
+          first = "2086";
+          middle = "2087";
+      }
+      else if (today >= new Date("2030-07-17") && today < new Date("2031-07-17")) {
+          if (first !== "2087" && middle !== "2088") {
+              lastno = 1;
+          } else {
+              lastno++;
+          }
+          first = "2087";
+          middle = "2088";
+      }
+      else if (today >= new Date("2031-07-17")) {
+          if (first !== "2088" && middle !== "2089") {
+              lastno = 1;
+          } else {
+              lastno++;
+          }
+          first = "2088";
+          middle = "2089";
+      }
+
+        const newAuto = `${first}-${middle}-${lastno}`;
+        const timestamp = Date.now();
+
+        setformclient((prev) => ({
+          ...prev,
+          valuationFileNo: newAuto,
+          created_date: timestamp,
+        }));
+      } else {
+        setformclient((prev) => ({
+          ...prev,
+          valuationFileNo: "2082-2083-1",
+          created_date: Date.now(),
+        }));
+      }
   } catch (e) {
     alert(e);
     return null;
@@ -113,7 +171,7 @@ async function generateValuationFileNo() {
 
       {/* Valuation File No (Full width) */}
       <div className="md:col-span-2">
-        <label className="block mb-1 font-medium">Valuation File No</label>
+        <label className="block mb-1 font-medium">Valuation File No </label>
         <div className="flex">
           <input
             required
@@ -216,6 +274,37 @@ async function generateValuationFileNo() {
           className="text-black w-full px-2 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
         />
       </div>
+
+
+         {/* Property Address (Full width) */}
+      <div className="">
+        <label className="block mb-1 font-medium">Property Address</label>
+        <input
+          
+          type="text"
+          value={formclient.property_address}
+          onChange={(e) =>
+            setformclient({ ...formclient, property_address: e.target.value })
+          }
+          className="text-black w-full px-2 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+    
+       <div className="">
+        <label className="block mb-1 font-medium">Plot No</label>
+        <input
+          
+          type="text"
+          value={formclient.plot_no}
+          onChange={(e) =>
+            setformclient({ ...formclient, plot_no: e.target.value })
+          }
+          className="text-black w-full px-2 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+
      {/* latlong addres */}
         <div className="">
         <label className="block mb-1 font-medium">Latitude</label>
